@@ -1,0 +1,207 @@
+:root {
+  --bg: #0a0e17;
+  --surface: #111827;
+  --border: #1f2937;
+  --text: #e5e7eb;
+  --text-dim: #6b7280;
+  --accent: #3b82f6;
+  --danger: #ef4444;
+  --success: #22c55e;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 14px;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.status {
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+.status.online {
+  background: #052e16;
+  color: var(--success);
+}
+.status.offline {
+  background: #1c1917;
+  color: var(--text-dim);
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  flex: 1;
+  overflow: hidden;
+  background: var(--border);
+}
+
+.scan-control,
+.host-list,
+.event-log {
+  background: var(--surface);
+  padding: 16px;
+}
+
+.scan-control {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.scan-control h2,
+.host-list h2,
+.event-log-header h2 {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+}
+button:hover {
+  opacity: 0.9;
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.status-warn {
+  color: #f59e0b;
+  font-size: 12px;
+}
+.status-error {
+  color: var(--danger);
+  font-size: 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+th,
+td {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+th {
+  color: var(--text-dim);
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+td {
+  font-size: 13px;
+}
+td.empty {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 24px;
+}
+
+.host-list {
+  overflow-y: auto;
+}
+
+.event-log {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.event-log-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.event-log-header button {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  font-size: 12px;
+}
+.event-list {
+  flex: 1;
+  overflow-y: auto;
+}
+.event-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.event-tag {
+  background: #1e293b;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  margin-right: 8px;
+}
+.event-time {
+  color: var(--text-dim);
+  font-size: 11px;
+}
+.event-data {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text-dim);
+  max-height: 80px;
+  overflow: hidden;
+}
+
+.spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
