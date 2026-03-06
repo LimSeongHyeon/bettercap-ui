@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Settings from "./components/Settings";
 import ScanControl from "./components/ScanControl";
 import HostList from "./components/HostList";
 import EventLog from "./components/EventLog";
@@ -7,6 +8,7 @@ import { getSession } from "./lib/commands";
 import "./App.css";
 
 export default function App() {
+  const [bettercapRunning, setBettercapRunning] = useState(false);
   const { events, connected, clearEvents } = useBettercapEvents();
   const fetchHosts = useCallback(() => getSession(), []);
   const { hosts, loading, error, start } = usePollingHosts(fetchHosts);
@@ -34,9 +36,14 @@ export default function App() {
         </span>
       </header>
       <main>
-        <ScanControl connected={connected} onScanToggle={handleScanToggle} />
-        <HostList hosts={hosts} loading={loading} error={error} />
-        <EventLog events={events} onClear={clearEvents} />
+        <Settings onStatusChange={setBettercapRunning} />
+        {bettercapRunning && (
+          <>
+            <ScanControl connected={connected} onScanToggle={handleScanToggle} />
+            <HostList hosts={hosts} loading={loading} error={error} />
+            <EventLog events={events} onClear={clearEvents} />
+          </>
+        )}
       </main>
     </div>
   );
