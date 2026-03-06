@@ -1,19 +1,29 @@
 mod bettercap;
 mod commands;
+mod config;
+
+use std::process::Child;
 
 use bettercap::client::BettercapClient;
+use config::BettercapConfig;
+use tokio::sync::Mutex;
 
 pub struct AppState {
-    pub client: BettercapClient,
+    pub client: Mutex<BettercapClient>,
+    pub process: Mutex<Option<Child>>,
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let client = BettercapClient::new("127.0.0.1", 8081, "admin", "admin");
+    let cfg = BettercapConfig::load();
+    let client = BettercapClient::new(&cfg.api_host, cfg.api_port, &cfg.username, &cfg.password);
     let event_client = client.clone();
 
     tauri::Builder::default()
-        .manage(AppState { client })
+        .manage(AppState {
+            client: Mutex::new(client),
+            process: Mutex::new(None),
+        })
         .invoke_handler(tauri::generate_handler![
             commands::session::get_session,
             commands::session::run_command,
@@ -22,6 +32,10 @@ pub fn run() {
             commands::scan::get_hosts,
             commands::attack::start_arp_spoof,
             commands::attack::stop_arp_spoof,
+            commands::process::start_bettercap,
+            commands::process::stop_bettercap,
+            commands::process::get_bettercap_status,
+            commands::process::load_config,
         ])
         .setup(|app| {
             let handle = app.handle().clone();
