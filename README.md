@@ -7,17 +7,22 @@ Bettercap을 제어하는 Linux 데스크톱 애플리케이션. Tauri v2 + Reac
 ```
 ┌─ Kali Linux ───────────────────────────┐
 │                                         │
-│  wlan1 (외장 어댑터)                     │
-│    │                                    │
-│  bettercap (REST :8081 + WebSocket)     │
-│    ▲                                    │
-│    │ localhost                           │
-│    ▼                                    │
 │  Bettercap UI (Tauri native app)        │
-│    ├── Rust: bettercap API client       │
-│    └── React: 실시간 UI                  │
+│    ├── Settings: 인터페이스/포트 설정    │
+│    ├── bettercap 프로세스 시작/중지      │
+│    │       │                            │
+│    │       ▼                            │
+│    │   bettercap (subprocess)           │
+│    │   REST :8081 + WebSocket           │
+│    │       ▲                            │
+│    ├── Rust: API client (localhost)     │
+│    └── React: 실시간 UI                 │
+│                                         │
+│  wlan1 (외장 어댑터)                     │
 └─────────────────────────────────────────┘
 ```
+
+앱이 bettercap 프로세스를 직접 관리합니다. 별도 터미널 실행 불필요.
 
 ## Install
 
@@ -35,19 +40,19 @@ sudo apt-get install -f
 ## Usage
 
 ```bash
-# 1. bettercap API 서버 실행
-sudo bettercap -iface wlan1 \
-  -api-rest-address 127.0.0.1 \
-  -api-rest-port 8081 \
-  -api-rest-username admin \
-  -api-rest-password admin
-
-# 2. 앱 실행
 bettercap-ui
 ```
 
+1. Settings에서 네트워크 인터페이스, API 포트, 인증정보 설정
+2. **Start Bettercap** 클릭
+3. 스캔, 호스트 목록, 이벤트 로그 사용
+
+설정값은 `~/.config/bettercap-ui/config.json`에 자동 저장됩니다.
+
 ## Features
 
+- **Process Control** — 앱에서 bettercap 프로세스 시작/중지
+- **Settings** — 인터페이스, API 주소/포트, 인증정보 설정 및 영구 저장
 - **Network Scan** — net.probe 기반 네트워크 스캔 및 호스트 탐지
 - **Host List** — 발견된 호스트 실시간 테이블 (IP, MAC, Vendor)
 - **Event Log** — bettercap WebSocket 이벤트 실시간 스트림
@@ -56,12 +61,14 @@ bettercap-ui
 ## Development
 
 ```bash
-# 의존성 설치
+# 시스템 의존성
 sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential \
   libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+
+# Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-# 프로젝트 빌드
+# 빌드 및 실행
 git clone https://github.com/LimSeongHyeon/bettercap-ui.git
 cd bettercap-ui
 npm install
