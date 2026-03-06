@@ -27,3 +27,27 @@ export async function startArpSpoof(targets: string): Promise<Record<string, unk
 export async function stopArpSpoof(): Promise<Record<string, unknown>> {
   return invoke("stop_arp_spoof");
 }
+
+export interface BettercapConfig {
+  iface: string;
+  api_host: string;
+  api_port: number;
+  username: string;
+  password: string;
+}
+
+export async function startBettercap(config: BettercapConfig): Promise<string> {
+  return invoke("start_bettercap", { config });
+}
+
+export async function stopBettercap(): Promise<string> {
+  return invoke("stop_bettercap");
+}
+
+export async function getBettercapStatus(): Promise<boolean> {
+  return invoke("get_bettercap_status");
+}
+
+export async function loadConfig(): Promise<BettercapConfig> {
+  return invoke("load_config");
+}
